@@ -1,4 +1,9 @@
 import type { Atom, WritableAtom } from './atom.ts'
+import type {
+  ExtractAtomArgs,
+  ExtractAtomResult,
+  ExtractAtomValue,
+} from './typeUtils.ts'
 
 type AnyValue = unknown
 type AnyError = unknown
@@ -286,11 +291,11 @@ type DevStoreRev4 = {
 }
 
 type PrdStore = {
-  get: <Value>(atom: Atom<Value>) => Value
-  set: <Value, Args extends unknown[], Result>(
-    atom: WritableAtom<Value, Args, Result>,
-    ...args: Args
-  ) => Result
+  get: <A extends Atom<any>>(atom: A) => ExtractAtomValue<A>
+  set: <A extends WritableAtom<any, any, any>>(
+    atom: A,
+    ...args: ExtractAtomArgs<A>
+  ) => ExtractAtomResult<A>
   sub: (atom: AnyAtom, listener: () => void) => () => void
   unstable_derive: (fn: (...args: StoreArgs) => StoreArgs) => Store
 }
